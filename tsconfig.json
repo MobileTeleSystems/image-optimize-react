@@ -25,7 +25,7 @@
         "strictFunctionTypes": false,
         "forceConsistentCasingInFileNames": true,
         "sourceMap": true,
-        "outDir": "./dist",
+        "outDir": "./dist/esnext",
         "noEmitOnError": true,
         "baseUrl": ".",
     },
