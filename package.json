@@ -1,0 +1,48 @@
+{
+  "name": "@mts-pjsc/image-optimize",
+  "version": "1.0.0",
+  "description": "React component for image optimizer",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "esnext": "dist/index.mjs",
+  "scripts": {
+    "eslint": "eslint --fix -c .eslintrc.js --ext .tsx,.ts,.jsx,.js ./src/",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:esnext": "tsc --project tsconfig.json",
+    "build:commonjs": "tsc --project tsconfig.es5.json",
+    "build:rename": "find ./dist/ -name \"*.js\" -exec rename .js .mjs {} +",
+    "build": "rm -rf dist/ && npm run build:esnext && npm run build:rename && npm run build:commonjs",
+    "prepublishOnly": "npm run cs:eslint && npm run build && npm run test && npm version patch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MobileTeleSystems/image-optimize-react.git"
+  },
+  "keywords": [
+    "image",
+    "optimization"
+  ],
+  "lint-staged": {
+    "./src/**/*.(ts|tsx|js|jsx)": [
+      "eslint --fix -c .eslintrc.js --ext .tsx,.ts,.jsx,.js"
+    ]
+  },
+  "author": "MobileTeleSystems",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/MobileTeleSystems/image-optimize-react/issues"
+  },
+  "homepage": "https://github.com/MobileTeleSystems/image-optimize-react#readme",
+  "dependencies": {
+    "react": "^17.0.2",
+    "tslib": "^2.3.1"
+  },
+  "devDependencies": {
+    "@labeg/code-style": "^2.0.27",
+    "@types/node": "^16.11.12",
+    "@types/react": "^17.0.37",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.1.2",
+    "typescript": "^4.5.4"
+  }
+}
