@@ -34,8 +34,7 @@
   },
   "homepage": "https://github.com/MobileTeleSystems/image-optimize-react#readme",
   "dependencies": {
-    "react": "^17.0.2",
-    "tslib": "^2.3.1"
+    "react": "^17.0.2"
   },
   "devDependencies": {
     "@labeg/code-style": "^2.0.27",
