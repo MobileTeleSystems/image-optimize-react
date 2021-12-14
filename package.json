@@ -10,8 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:esnext": "tsc --project tsconfig.json",
     "build:commonjs": "tsc --project tsconfig.es5.json",
-    "build": "rm -rf dist/ && npm run build:esnext && npm run build:commonjs",
-    "prepublishOnly": "npm run cs:eslint && npm run build && npm run test && npm version patch"
+    "build": "rm -rf dist/ && npm run build:esnext && npm run build:commonjs"
   },
   "repository": {
     "type": "git",
