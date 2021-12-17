@@ -1,4 +1,6 @@
-# Microservice for responsive resize, compression and optimization of images on the fly for web pages.
+# React component for using optimized images in the browser.
+
+Works in conjunction with the [Image Optimizer](https://github.com/MobileTeleSystems/image-optimize).
 
 Optimizing images helps reduce image weight and increases website loading speed, which is very important for both users and search engines. For these purposes, we have created a microservice that perfectly copes with this task.
 
@@ -12,38 +14,17 @@ Features:
 - Supports basic authorization for multiple domains and endpoints,
 - Supports security restrictions for allowed addresses.
 
-### Try
-To try the microservice features, run the container with the command:
-```sh
-docker run -it --rm -p 3000:3000 mts-optimize
-```
+### Before use
+[The optimization microservice](https://github.com/MobileTeleSystems/image-optimize) must be deployed on the server along the path `/optimizer`. React component will use it.
 
-Now you can open the browser and check the work with the command:
-```sh
-http://localhost:3000/optimize?size=1060&format=webp&src=https://tb.mts.ru/static/landing/images-index2/banner/slider/partners.png
-```
+### Using
 
-By changing the src, size, format parameters, you can choose the path to the image, the final size and the image format.
+Just replace the \<img\> element with the Image component from the package. The component is fully compatible with the \<img\> element. Next, the component will do all the magic on its own.
 
-### Use
-To start the microservice in production, use the command:
-```sh
-docker run -d --restart always -p 3000:3000 mts-optimize
-```
-
-### Container parameters
-- `-e PORT=3000` - the port on which the microservice will be launched, default 3000.
-- `-e ALLOW_SIZES="100,200,1024-1920"` - an array of allowed sizes for the resulting images, default 100-1920. Use specific values to prevent heavy loads on the server.
-- `-e ALLOW_SOURCES="https%3A%2F%2Ftb.mts.ru%2F"` - url array of allowed addresses for image sources, default * (any). Use comma as separator. It is recommended to apply encodeURIComponent to url.
-- `-e BASIC_AUTHS="https%3A%2F%2Ftb.mts.ru%2F"` - an array of endpoints with basic authorization parameters, default empty. Has format encodeURIComponent("url"):login:password. Use comma as separator.
-
-### Components for web
-Right now you can use sample from the ./components-samples/ReactLazyImg.ts(add link after publishing) file. Just copy the file to your project and use it. The component inherits interface of the html img element. The component automatically check the most suitable picture in size and formats supported by the browser and selects the most optimal picture for display.
-
-Sample for use in React:
+Sample:
 ```typescript
-<LazyImg
-    alt="Sample of work mts-optimize"
+<Image
+    alt="Sample of work Image Optimizer"
     src="/static/landing/images-getmeback/phone-fon.png"
 />
 ```
