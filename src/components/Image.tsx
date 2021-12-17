@@ -23,10 +23,13 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
      * Change for local development.
      *
      * The server microservice will not be able to make a request to your localhost.
-     * Therefore, when developing locally, you must specify a product or development server.
+     * Therefore, when developing locally, you must specify a production or development server origin.
+     *
+     * Example:
+     * https://tb.mts.ru
      *
      */
-    public static domain: string = location.origin;
+    public static imgOrigin: string = location.origin;
 
     public resultUrl: string = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
@@ -148,7 +151,7 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
         this.lastOptimalSize = indexOptimalSize;
 
         // Make correct source url
-        const sourceUrl = new URL(this.sourceUrl, Image.domain);
+        const sourceUrl = new URL(this.sourceUrl, Image.imgOrigin);
 
         // Make result url
         const url = new URL("/optimizer/optimize", location.origin);
