@@ -19,6 +19,15 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
 
     public static isWebP: boolean | null = null;
 
+    /**
+     * Change for local development.
+     *
+     * The server microservice will not be able to make a request to your localhost.
+     * Therefore, when developing locally, you must specify a product or development server.
+     *
+     */
+    public static domain: string = location.origin;
+
     public resultUrl: string = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
     public resizeCheckTimeout: number = 0;
@@ -139,7 +148,7 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
         this.lastOptimalSize = indexOptimalSize;
 
         // Make correct source url
-        const sourceUrl = new URL(this.sourceUrl, location.origin);
+        const sourceUrl = new URL(this.sourceUrl, Image.domain);
 
         // Make result url
         const url = new URL("/optimizer/optimize", location.origin);
