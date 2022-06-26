@@ -19,6 +19,9 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
 
     public static isWebP: boolean | null = null;
 
+    public static controlPoints: number[] = [160, 320, 640, 1280, 1920];
+
+
     /**
      * Change for local development.
      *
@@ -35,19 +38,21 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
 
     public resizeCheckTimeout: number = 0;
 
-    public thisComponent!: HTMLImageElement | null;
+    public thisComponent: HTMLImageElement | null = null;
 
-    private sourceUrl: string = "";
+    protected sourceUrl: string = "";
 
-    private readonly extensionsRegexp: RegExp = /\.\w+$/u;
+    protected readonly extensionsRegexp: RegExp = /\.\w+$/u;
 
-    private readonly controlPoints: number[] = [160, 320, 640, 1280, 1920];
+    protected readonly windowResizeHandler: EventListenerOrEventListenerObject;
 
-    private readonly windowResizeHandler: EventListenerOrEventListenerObject;
+    protected lastOptimalSize: number = 0;
 
-    private lastOptimalSize: number = -1;
-
-    private checks: number = 0;
+    /**
+     * Serves to prevent recursion when resizing images to determine the optimal size.
+     * This recursion can be caught with poor layout that does not take into account the scaling of images.
+     */
+    protected checks: number = 0;
 
     public constructor (props: P) {
         super(props);
@@ -89,110 +94,32 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
         );
     }
 
-    // eslint-disable-next-line max-statements, complexity, max-lines-per-function
-    private async checkImage (isResize: boolean = false): Promise<void> {
-        if (!this.thisComponent) {
-            return;
-        }
-
+    protected async checkImage (isResize: boolean = false): Promise<void> {
         if (this.checks > 1) {
             return;
         }
 
-        if (Image.isAvif === null) {
-            const result: boolean = await checkAvifFeature();
-            // !!! Eslint alert it's true, upgrade algorithm later
-            // eslint-disable-next-line require-atomic-updates
-            Image.isAvif = result;
-            this.checkImage();
-            return;
-        }
-
-        if (!Image.isAvif && Image.isWebP === null) {
-            const result: boolean = await checkWebpFeature();
-            // eslint-disable-next-line require-atomic-updates
-            Image.isWebP = result;
-            this.checkImage();
+        const isCheckProcess = await this.checkSupportFormat();
+        if (isCheckProcess) {
             return;
         }
 
         // Checks +1 after check webp support
         this.checks += 1;
 
-        // Find optimal size
-        let containerSize: number = 0;
-        let element: HTMLElement | null = this.thisComponent;
-        while (containerSize < 2 && Boolean(element)) {
-            containerSize = element.getBoundingClientRect().width ||
-                Number.parseFloat(getComputedStyle(element).width) || 0;
-            // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
-            element = element.parentElement as HTMLElement;
-        }
-
-        containerSize *= window.devicePixelRatio;
-        let indexOptimalSize: number = this.controlPoints
-            .findIndex((width: number) => containerSize <= width);
-
-        if (indexOptimalSize < 0) { // If bigger then maximum size or NaN
-            indexOptimalSize = this.controlPoints.length - 1;
-        }
-
-        indexOptimalSize += this.props.offset ?? 0;
-        if (indexOptimalSize < 0) {
-            indexOptimalSize = 0;
-        } else if (indexOptimalSize >= this.controlPoints.length) {
-            indexOptimalSize = this.controlPoints.length - 1;
-        }
-
-        if (!isResize && this.lastOptimalSize >= 0 && this.lastOptimalSize !== indexOptimalSize) {
-            // eslint-disable-next-line no-console
-            console.warn("New image size", this.controlPoints[this.lastOptimalSize], this.controlPoints[indexOptimalSize], this.sourceUrl);
-        }
-        this.lastOptimalSize = indexOptimalSize;
-
-        // Make correct source url
-        const sourceUrl = new URL(this.sourceUrl, Image.imgOrigin);
-
-        // Make result url
-        const url = new URL("/optimizer/optimize", location.origin);
-        url.searchParams.set("src", sourceUrl.toString());
-        url.searchParams.set("size", String(this.controlPoints[indexOptimalSize]));
-
-        if (typeof this.props.quality === "number") {
-            url.searchParams.set("quality", String(this.props.quality));
-        }
-
-        const match: RegExpExecArray | null = this.extensionsRegexp.exec(sourceUrl.pathname);
-        let format = "";
-        if (Image.isAvif) {
-            format = "avif";
-        } else if (Image.isWebP === true) {
-            format = "webp";
-        } else {
-            format = String(match?.[0])
-                .replace(".", "")
-                .replace("jpg", "jpeg");
-        }
-        url.searchParams.set("format", format);
-
-        // Apply result url
-        const resultUrl = url.toString();
-        if (this.resultUrl !== resultUrl) {
-            this.resultUrl = resultUrl;
-            this.thisComponent.src = this.resultUrl;
-            if (process.env.NODE_ENV !== "production" && Image.isShowDiagnostic) {
-                // eslint-disable-next-line no-console
-                console.log([
-                    "🏄 Image optimization:",
-                    `Container size ${containerSize}px,`,
-                    `optimal size ${this.controlPoints[indexOptimalSize]},`,
-                    `image ${this.sourceUrl}`
-                ].join(" "));
-            }
-        }
+        this.processImage(isResize);
     }
 
-    private onWindowResize (): void {
+    protected processImage (isResize: boolean): void {
+        const containerSize = this.getContainerSize();
+        const optimalSize = this.getOptimalSize(containerSize);
+        this.showWarningOnResize(isResize, optimalSize);
+        const url = this.makeResultUrl(optimalSize);
+        this.applyResultUrl(url);
+        this.showResultInLog(containerSize, optimalSize);
+    }
+
+    protected onWindowResize (): void {
         if (this.resizeCheckTimeout) {
             clearTimeout(this.resizeCheckTimeout);
         }
@@ -201,6 +128,139 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
             this.checks = 0;
             this.checkImage(true);
         }, 500);
+    }
+
+    protected getContainerSize (): number {
+        let containerSize: number = 0;
+
+        let element: HTMLElement | null = this.thisComponent;
+
+        while (containerSize < 2 && element) {
+            containerSize = element.getBoundingClientRect().width ||
+                Number.parseFloat(getComputedStyle(element).width) || 0;
+            element = element.parentElement;
+        }
+
+        return containerSize * window.devicePixelRatio;
+    }
+
+    protected getOptimalSize (containerSize: number): number {
+        let index: number = Image.controlPoints
+            .findIndex((width: number) => containerSize <= width);
+
+        // If bigger then maximum size or NaN
+        if (index < 0) {
+            index = Image.controlPoints.length - 1;
+        }
+
+        // Make manual more or less size
+        index += this.props.offset ?? 0;
+
+        // If offset make out of boundary
+        if (index < 0) {
+            index = 0;
+        } else if (index >= Image.controlPoints.length) {
+            index = Image.controlPoints.length - 1;
+        }
+
+        return Image.controlPoints[index];
+    }
+
+    protected makeResultUrl (optimalSize: number): URL {
+        const sourceUrl = new URL(this.sourceUrl, Image.imgOrigin);
+
+        const url = new URL("/optimizer/optimize", location.origin);
+        url.searchParams.set("src", sourceUrl.toString());
+        url.searchParams.set("size", String(optimalSize));
+
+        if (typeof this.props.quality === "number") {
+            url.searchParams.set("quality", String(this.props.quality));
+        }
+
+        const format = this.extractImageFormat(sourceUrl.pathname);
+        url.searchParams.set("format", format);
+
+        return url;
+    }
+
+    protected extractImageFormat (path: string): string {
+        let format = "";
+
+        const match: RegExpExecArray | null = this.extensionsRegexp.exec(path);
+
+        if (Image.isAvif === true) {
+            format = "avif";
+        } else if (Image.isWebP === true) {
+            format = "webp";
+        } else {
+            format = String(match?.[0])
+                .replace(".", "")
+                .replace("jpg", "jpeg");
+        }
+
+        return format;
+    }
+
+    protected applyResultUrl (url: URL): void {
+        const resultUrl = url.toString();
+        if (this.resultUrl !== resultUrl && this.thisComponent) {
+            this.resultUrl = resultUrl;
+            this.thisComponent.src = this.resultUrl;
+        }
+    }
+
+    /**
+     * This function should motivate the developer to make a layout that does not cause resizing.
+     *
+     * @param {boolean} isResize
+     * @param {number} optimalSize
+     */
+    protected showWarningOnResize (isResize: boolean, optimalSize: number): void {
+        if (
+            !isResize &&
+            this.lastOptimalSize >= 0 &&
+            this.lastOptimalSize !== optimalSize
+        ) {
+            // eslint-disable-next-line no-console
+            console.warn(
+                "New image size",
+                this.lastOptimalSize,
+                optimalSize,
+                this.sourceUrl
+            );
+        }
+        this.lastOptimalSize = optimalSize;
+    }
+
+    protected showResultInLog (containerSize: number, optimalSize: number): void {
+        if (process.env.NODE_ENV !== "production" && Image.isShowDiagnostic) {
+            // eslint-disable-next-line no-console
+            console.log([
+                "🏄 Image optimization:",
+                `Container size ${containerSize}px,`,
+                `optimal size ${optimalSize},`,
+                `image ${this.sourceUrl}`
+            ].join(" "));
+        }
+    }
+
+    protected async checkSupportFormat (): Promise<boolean> {
+        if (Image.isAvif === null) {
+            const result: boolean = await checkAvifFeature();
+            // !!! Eslint alert it's true, upgrade algorithm later
+            // eslint-disable-next-line require-atomic-updates
+            Image.isAvif = result;
+            this.checkImage();
+            return true;
+        } else if (Image.isWebP === null) {
+            const result: boolean = await checkWebpFeature();
+            // eslint-disable-next-line require-atomic-updates
+            Image.isWebP = result;
+            this.checkImage();
+            return true;
+        }
+
+        return false;
     }
 
 }
