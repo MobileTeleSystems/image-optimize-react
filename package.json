@@ -1,6 +1,6 @@
 {
   "name": "@mts-pjsc/image-optimize",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "React component for image optimizer",
   "main": "dist/es5/index.js",
   "module": "dist/esnext/index.js",
@@ -11,7 +11,7 @@
     "build:esnext": "tsc --project tsconfig.json",
     "build:commonjs": "tsc --project tsconfig.es5.json",
     "build": "rm -rf dist/ && npm run build:esnext && npm run build:commonjs",
-    "postinstall": "husky install"
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
