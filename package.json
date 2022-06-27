@@ -1,10 +1,10 @@
 {
   "name": "@mts-pjsc/image-optimize",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "React component for image optimizer",
-  "main": "dist/es5/index.js",
-  "module": "dist/esnext/index.js",
-  "esnext": "dist/esnext/index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "esnext": "dist/index.js",
   "type": "module",
   "scripts": {
     "eslint": "eslint --fix -c .eslintrc.cjs --ext .tsx,.ts,.jsx,.js ./src/",
