@@ -1,6 +1,5 @@
 import React from "react";
-import {checkAvifFeature} from "../helpers/check-avif-feature";
-import {checkWebpFeature} from "../helpers/check-webp-feature";
+import {getFormatFeatures} from "../helpers/get-format-features";
 
 export interface IImageOptions {
     src: string;
@@ -15,12 +14,11 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
 
     public static isShowDiagnostic: boolean = false;
 
-    public static isAvif: boolean | null = null;
-
-    public static isWebP: boolean | null = null;
-
     public static controlPoints: number[] = [160, 320, 640, 1280, 1920];
 
+    private static isAvif: boolean | null = null;
+
+    private static isWebP: boolean | null = null;
 
     /**
      * Change for local development.
@@ -69,6 +67,8 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
         if (this.sourceUrl !== props.src) {
             this.sourceUrl = props.src;
             this.checks = 0;
+
+            // Raf for correct image position after redraw outer components
             requestAnimationFrame(() => this.checkImage());
             return true;
         }
@@ -98,14 +98,11 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
         if (this.checks > 1) {
             return;
         }
-
-        const isCheckProcess = await this.checkSupportFormat();
-        if (isCheckProcess) {
-            return;
-        }
-
-        // Checks +1 after check webp support
         this.checks += 1;
+
+        if (Image.isAvif === null || Image.isWebP === null) {
+            await this.initImageFormats();
+        }
 
         this.processImage(isResize);
     }
@@ -244,23 +241,13 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
         }
     }
 
-    protected async checkSupportFormat (): Promise<boolean> {
-        if (Image.isAvif === null) {
-            const result: boolean = await checkAvifFeature();
-            // !!! Eslint alert it's true, upgrade algorithm later
-            // eslint-disable-next-line require-atomic-updates
-            Image.isAvif = result;
-            this.checkImage();
-            return true;
-        } else if (Image.isWebP === null) {
-            const result: boolean = await checkWebpFeature();
-            // eslint-disable-next-line require-atomic-updates
-            Image.isWebP = result;
-            this.checkImage();
-            return true;
-        }
+    protected async initImageFormats (): Promise<void> {
+        const format = await getFormatFeatures();
 
-        return false;
+        if (Image.isAvif === null || Image.isWebP === null) {
+            Image.isAvif = format === "avif";
+            Image.isWebP = format === "webp";
+        }
     }
 
 }
