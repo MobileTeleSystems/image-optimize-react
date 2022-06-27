@@ -1,16 +1,16 @@
 {
   "name": "@mts-pjsc/image-optimize",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "description": "React component for image optimizer",
   "main": "dist/es5/index.js",
   "module": "dist/esnext/index.js",
   "esnext": "dist/esnext/index.js",
+  "type": "module",
   "scripts": {
-    "eslint": "eslint --fix -c .eslintrc.js --ext .tsx,.ts,.jsx,.js ./src/",
+    "eslint": "eslint --fix -c .eslintrc.cjs --ext .tsx,.ts,.jsx,.js ./src/",
     "test": "echo \"Error: no test specified. For test need deployed microservice part\" && exit 1",
-    "build:esnext": "tsc --project tsconfig.json",
-    "build:commonjs": "tsc --project tsconfig.es5.json",
-    "build": "rm -rf dist/ && npm run build:esnext && npm run build:commonjs",
+    "test:module": "node ./dist/index.js",
+    "build": "rm -rf dist/ && tsc --project tsconfig.json && npm run test:module",
     "prepare": "husky install"
   },
   "repository": {
@@ -23,7 +23,7 @@
   ],
   "lint-staged": {
     "./src/**/*.(ts|tsx|js|jsx)": [
-      "eslint --fix -c .eslintrc.js --ext .tsx,.ts,.jsx,.js"
+      "eslint --fix -c .eslintrc.cjs --ext .tsx,.ts,.jsx,.js"
     ]
   },
   "author": "MobileTeleSystems",

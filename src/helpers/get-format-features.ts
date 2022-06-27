@@ -1,6 +1,6 @@
 
-import {checkAvifFeature} from "./check-avif-feature";
-import {checkWebpFeature} from "./check-webp-feature";
+import {checkAvifFeature} from "./check-avif-feature.js";
+import {checkWebpFeature} from "./check-webp-feature.js";
 
 // eslint-disable-next-line @typescript-eslint/no-type-alias
 type FormatType = "avif" | "webp" | null;

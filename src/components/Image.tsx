@@ -1,5 +1,5 @@
 import * as React from "react";
-import {getFormatFeatures} from "../helpers/get-format-features";
+import {getFormatFeatures} from "../helpers/get-format-features.js";
 
 export interface IImageOptions {
     src: string;
@@ -30,7 +30,8 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
      * https://tb.mts.ru
      *
      */
-    public static imgOrigin: string = location.origin;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-binary-expression
+    public static imgOrigin: string = typeof process === void 0 ? location.origin : "";
 
     public resultUrl: string = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
