@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import {getFormatFeatures} from "../helpers/get-format-features";
 
 export interface IImageOptions {

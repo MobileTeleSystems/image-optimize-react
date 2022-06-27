@@ -1,6 +1,6 @@
 {
   "name": "@mts-pjsc/image-optimize",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "React component for image optimizer",
   "main": "dist/es5/index.js",
   "module": "dist/esnext/index.js",
