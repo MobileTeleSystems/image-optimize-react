@@ -31,7 +31,7 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-binary-expression
-    public static imgOrigin: string = typeof process === void 0 ? location.origin : "";
+    public static imgOrigin?: string = void 0;
 
     public resultUrl: string = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
@@ -165,7 +165,10 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
     }
 
     protected makeResultUrl (optimalSize: number): URL {
-        const sourceUrl = new URL(this.sourceUrl, Image.imgOrigin);
+        const sourceUrl = new URL(
+            this.sourceUrl,
+            Image.imgOrigin ?? location.origin
+        );
 
         const url = new URL("/optimizer/optimize", location.origin);
         url.searchParams.set("src", sourceUrl.toString());
