@@ -108,15 +108,15 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
     }
 
     protected async checkImage (isResize: boolean = false): Promise<void> {
-        if (Image.isUseSourceUrl && this.thisComponent) {
-            this.thisComponent.src = this.resultUrl;
-            return;
-        }
-
         if (this.checks > 1) {
             return;
         }
         this.checks += 1;
+
+        if (Image.isUseSourceUrl && this.thisComponent) {
+            this.thisComponent.src = this.sourceUrl;
+            return;
+        }
 
         if (Image.isAvif === null || Image.isWebP === null) {
             await this.initImageFormats();
