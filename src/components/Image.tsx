@@ -16,22 +16,34 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
 
     public static controlPoints: number[] = [160, 320, 640, 1280, 1920];
 
+    /**
+     * Image optimizer will take source url for show image.
+     *
+     * This is required when working on localhost.
+     * Because a remote microservice cannot make requests to your localhost.
+     *
+     * Example:
+     * Image.isUseSourceUrl = process.env.NODE_ENV !== "production";
+     */
+    public static isUseSourceUrl: boolean = false;
+
+    /**
+     * Image optimizer will change origin to other domain.
+     *
+     * This is necessary when you developing locally, this will take pictures from the DEV server by CORS.
+     *
+     * Also, this parameter must be specified if the component works in the microfront.
+     * Then you need to specify the address to the server with pictures.
+     *
+     * Example:
+     * Image.imgOrigin = https://tb.mts.ru
+     *
+     */
+    public static imgOrigin?: string = void 0;
+
     private static isAvif: boolean | null = null;
 
     private static isWebP: boolean | null = null;
-
-    /**
-     * Change for local development.
-     *
-     * The server microservice will not be able to make a request to your localhost.
-     * Therefore, when developing locally, you must specify a production or development server origin.
-     *
-     * Example:
-     * https://tb.mts.ru
-     *
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-binary-expression
-    public static imgOrigin?: string = void 0;
 
     public resultUrl: string = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
@@ -96,6 +108,11 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
     }
 
     protected async checkImage (isResize: boolean = false): Promise<void> {
+        if (Image.isUseSourceUrl && this.thisComponent) {
+            this.thisComponent.src = this.resultUrl;
+            return;
+        }
+
         if (this.checks > 1) {
             return;
         }
