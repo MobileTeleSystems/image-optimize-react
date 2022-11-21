@@ -18,12 +18,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Build and publish package
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: 17
+          node-version: 18
           registry-url: https://registry.npmjs.org/
 
       - run: npm ci
