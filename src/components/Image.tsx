@@ -1,12 +1,11 @@
 import * as React from "react";
 import {getFormatFeatures} from "../helpers/get-format-features.js";
 
-export interface IImageOptions {
+export interface IImageOptions extends React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement> {
     src: string;
     alt: string;
     offset?: number;
     quality?: number;
-    className?: string;
     setRef?: (elem: HTMLImageElement | null) => void;
 }
 
@@ -83,9 +82,7 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
 
             // Raf for correct image position after redraw outer components
             requestAnimationFrame(() => this.checkImage());
-            return true;
         }
-        return false;
     }
 
     public componentWillUnmount (): void {
@@ -93,10 +90,14 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
     }
 
     public render (): JSX.Element {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const {offset, quality, setRef, src, alt, ...props} = this.props;
+
         return (
             <img
-                alt={this.props.alt}
-                className={this.props.className}
+                // eslint-disable-next-line react/jsx-props-no-spreading
+                {...props}
+                alt={alt}
                 onLoad={(): number => requestAnimationFrame(() => this.checkImage())}
                 ref={(elem: HTMLImageElement | null): void => {
                     this.thisComponent = elem;
