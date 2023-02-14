@@ -83,6 +83,7 @@ export class Image<P extends IImageOptions> extends React.Component<P> {
             // Raf for correct image position after redraw outer components
             requestAnimationFrame(() => this.checkImage());
         }
+        return true;
     }
 
     public componentWillUnmount (): void {
