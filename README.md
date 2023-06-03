@@ -17,12 +17,20 @@ Features:
 ### Before use
 [The optimization microservice](https://github.com/MobileTeleSystems/image-optimize) must be deployed on the server along the path `/optimizer`. React component will use it.
 
+### Instalation
+Run script:
+```
+npm i @mts-pjsc/image-optimize
+```
+
 ### Using
 
 Just replace the \<img\> element with the Image component from the package. The component is fully compatible with the \<img\> element. Next, the component will do all the magic on its own.
 
 Sample:
 ```typescript
+import {Image} from "@mts-pjsc/image-optimize";
+
 <Image
     alt="Sample of work Image Optimizer"
     src="/static/landing/images-getmeback/phone-fon.png"
