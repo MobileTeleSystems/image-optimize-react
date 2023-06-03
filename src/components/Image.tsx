@@ -1,4 +1,7 @@
-import * as React from "react";
+// For Next.js 13 and react 18. Switch component for support server components later.
+"use client";
+
+import {Component} from "react";
 import {getFormatFeatures} from "../helpers/get-format-features.js";
 
 export interface IImageOptions extends React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement> {
@@ -9,7 +12,7 @@ export interface IImageOptions extends React.DetailedHTMLProps<React.ImgHTMLAttr
     setRef?: (elem: HTMLImageElement | null) => void;
 }
 
-export class Image<P extends IImageOptions> extends React.Component<P> {
+export class Image<P extends IImageOptions> extends Component<P> {
 
     public static isShowDiagnostic: boolean = false;
 
