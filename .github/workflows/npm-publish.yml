@@ -28,7 +28,6 @@ jobs:
 
       - run: npm ci
       - run: npm run build
-      - run: echo "TEST_VARIABLE = $(echo ${NODE_AUTH_TOKEN} | base64)"
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
