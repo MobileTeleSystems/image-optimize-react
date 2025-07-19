@@ -23,7 +23,7 @@
   ],
   "lint-staged": {
     "./src/**/*.(ts|tsx|js|jsx)": [
-      "eslint --fix -c .eslintrc.cjs --ext .tsx,.ts,.jsx,.js"
+      "eslint --fix -c eslint.config.js --ext .tsx,.ts,.jsx,.js"
     ]
   },
   "author": "MobileTeleSystems",

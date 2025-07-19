@@ -7,7 +7,7 @@
     "strict": true,
     "skipLibCheck": true,
     "declaration": true,
-    "jsx": "react-jsx",
+    "jsx": "react",
     "outDir": "./dist/",
   },
   "include": [

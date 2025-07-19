@@ -1,7 +1,11 @@
+/* eslint-disable react/jsx-no-bind */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/sort-comp */
+
 // For Next.js 13 and react 18. Switch component for support server components later.
 "use client";
 
-import {Component} from "react";
+import React, {Component, JSX} from "react";
 import {getFormatFeatures} from "../helpers/get-format-features.js";
 
 export interface IImageOptions extends React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement> {
@@ -14,7 +18,7 @@ export interface IImageOptions extends React.DetailedHTMLProps<React.ImgHTMLAttr
 
 export class Image<P extends IImageOptions> extends Component<P> {
 
-    public static isShowDiagnostic: boolean = false;
+    public static isShowDiagnostic = false;
 
     public static controlPoints: number[] = [160, 320, 640, 1280, 1920];
 
@@ -27,7 +31,7 @@ export class Image<P extends IImageOptions> extends Component<P> {
      * Example:
      * Image.isUseSourceUrl = process.env.NODE_ENV !== "production";
      */
-    public static isUseSourceUrl: boolean = false;
+    public static isUseSourceUrl = false;
 
     /**
      * Image optimizer will change origin to other domain.
@@ -47,25 +51,25 @@ export class Image<P extends IImageOptions> extends Component<P> {
 
     private static isWebP: boolean | null = null;
 
-    public resultUrl: string = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+    public resultUrl = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
-    public resizeCheckTimeout: number = 0;
+    public resizeCheckTimeout = 0;
 
     public thisComponent: HTMLImageElement | null = null;
 
-    protected sourceUrl: string = "";
+    protected sourceUrl = "";
 
     protected readonly extensionsRegexp: RegExp = /\.\w+$/u;
 
     protected readonly windowResizeHandler: EventListenerOrEventListenerObject;
 
-    protected lastOptimalSize: number = 0;
+    protected lastOptimalSize = 0;
 
     /**
      * Serves to prevent recursion when resizing images to determine the optimal size.
      * This recursion can be caught with poor layout that does not take into account the scaling of images.
      */
-    protected checks: number = 0;
+    protected checks = 0;
 
     public constructor (props: P) {
         super(props);
@@ -112,7 +116,7 @@ export class Image<P extends IImageOptions> extends Component<P> {
         );
     }
 
-    protected async checkImage (isResize: boolean = false): Promise<void> {
+    protected async checkImage (isResize = false): Promise<void> {
         if (this.checks > 1) {
             return;
         }
@@ -151,7 +155,7 @@ export class Image<P extends IImageOptions> extends Component<P> {
     }
 
     protected getContainerSize (): number {
-        let containerSize: number = 0;
+        let containerSize = 0;
 
         let element: HTMLElement | null = this.thisComponent;
 
@@ -207,6 +211,7 @@ export class Image<P extends IImageOptions> extends Component<P> {
     }
 
     protected extractImageFormat (path: string): string {
+        // eslint-disable-next-line no-useless-assignment
         let format = "";
 
         const match: RegExpExecArray | null = this.extensionsRegexp.exec(path);
@@ -267,6 +272,7 @@ export class Image<P extends IImageOptions> extends Component<P> {
         }
     }
 
+    // eslint-disable-next-line class-methods-use-this
     protected async initImageFormats (): Promise<void> {
         const format = await getFormatFeatures();
 
