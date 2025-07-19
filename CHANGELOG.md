@@ -8,13 +8,6 @@ All notable changes to this project will be documented in this file.
 
 - Update version to 1.3.3 and add changelog file
 
-## [unreleased]
-
-### ⚙️ Miscellaneous Tasks
-
-- *(@mts-pjsc/image-optimize)* Release @mts-pjsc/image-optimize@1.3.0
-- Bump version to 1.3.1 and remove changelog
-
 ## [1.3.0] - 2025-07-19
 
 ### 🚀 Features
@@ -67,12 +60,6 @@ All notable changes to this project will be documented in this file.
 - Update packages versions
 - Update github actions versions
 - Fix typings for build
-- Actions diagnostic
-- Action diagnostic
-- Action diagnostic
-- Action diagnostic
-- Disable diagnostic
-- Config update
 - Update eslint configuration and upgrade devDependencies
 - *(ts-fetch)* Release ts-fetch@1.3.0
 
