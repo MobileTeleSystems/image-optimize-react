@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.4] - 2025-07-19
+
+### ⚙️ Miscellaneous Tasks
+
+- Update version to 1.3.3 and add changelog file
+
 ## [unreleased]
 
 ### ⚙️ Miscellaneous Tasks
