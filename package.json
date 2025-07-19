@@ -11,6 +11,7 @@
     "test": "echo \"Error: no test specified. For test need deployed microservice part\" && exit 1",
     "test:module": "node ./dist/index.js",
     "build": "rm -rf dist/ && tsc --project tsconfig.json && npm run test:module",
+    "release": "cliff-jumper --name 'ts-fetch' --package-path '.' --no-skip-changelog --no-skip-tag",
     "prepare": "husky install"
   },
   "repository": {
@@ -39,6 +40,7 @@
     "@labeg/code-style": "^6.5.0",
     "@types/node": "^24.0.15",
     "@types/react": "^19.1.8",
+    "@favware/cliff-jumper": "^6.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
     "typescript": "^5.8.3"
