@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.5] - 2025-07-19
+
+### ⚙️ Miscellaneous Tasks
+
+- Clean up changelog by removing unreleased section and redundant entries
+
 ## [1.3.4] - 2025-07-19
 
 ### ⚙️ Miscellaneous Tasks
