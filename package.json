@@ -37,8 +37,8 @@
     "react": ">=16.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.3.0",
-    "@commitlint/config-conventional": "^17.3.0",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@labeg/code-style": "^6.5.0",
     "@types/node": "^24.0.15",
     "@types/react": "^19.1.8",
