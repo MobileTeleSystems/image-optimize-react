@@ -24,7 +24,7 @@ jobs:
       - name: Build and publish package
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 24
           registry-url: https://registry.npmjs.org/
 
       - run: git config --global user.email "elabutin@mts.ru"
