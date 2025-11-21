@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.9] - 2025-11-21
+
+### ⚙️ Miscellaneous Tasks
+
+- Update dependencies and husky configuration
+
 ## [1.3.8] - 2025-07-20
 
 ## [1.3.7] - 2025-07-20
