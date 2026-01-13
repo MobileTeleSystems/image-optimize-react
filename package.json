@@ -6,6 +6,9 @@
   "module": "dist/index.js",
   "esnext": "dist/index.js",
   "type": "module",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "eslint": "eslint --fix -c eslint.config.js --ext .tsx,.ts,.jsx,.js ./src/",
     "test": "echo \"Error: no test specified. For test need deployed microservice part\" && exit 1",
