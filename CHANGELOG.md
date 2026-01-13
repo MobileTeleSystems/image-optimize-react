@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.10] - 2026-01-13
+
+### ⚙️ Miscellaneous Tasks
+
+- Add issue templates for bug reports and feature requests, enhance PR template, and implement security policy
+
 ## [1.3.9] - 2025-11-21
 
 ### ⚙️ Miscellaneous Tasks
