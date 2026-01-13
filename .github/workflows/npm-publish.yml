@@ -1,4 +1,4 @@
-name: Docker
+name: NPM Publish
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -8,14 +8,17 @@ name: Docker
 on:
   push:
     branches: [ main ]
+  schedule:
+    - cron: '0 12 8-14 1,5,9 4'  # Thursday of 2nd week, 3 times a year (Jan, May, Sep) at 12:00 UTC
   workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write  # Required for npm provenance
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
 
     steps:
       - name: Checkout repository
@@ -27,12 +30,22 @@ jobs:
           node-version: 24
           registry-url: https://registry.npmjs.org/
 
-      - run: git config --global user.email "elabutin@mts.ru"
-      - run: git config --global user.name "Eugene Labutin"
-      - run: npm ci
-      - run: npm run build
-      - run: npm run release
-      - run: git push && git push --tags
-      - run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - name: Configure Git
+        run: |
+          git config --global user.email "elabutin@mts.ru"
+          git config --global user.name "Eugene Labutin"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build
+
+      - name: Create release
+        run: npm run release
+
+      - name: Push changes and tags
+        run: git push && git push --tags
+
+      - name: Publish to NPM
+        run: npm publish --provenance --access public
