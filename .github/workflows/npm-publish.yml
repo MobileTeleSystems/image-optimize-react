@@ -9,7 +9,7 @@ on:
   push:
     branches: [ main ]
   schedule:
-    - cron: '0 12 8-14 1,5,9 4'  # Thursday of 2nd week, 3 times a year (Jan, May, Sep) at 12:00 UTC
+    - cron: '0 12 5 1,5,9 *'  # 5th day of month, 3 times a year (Jan, May, Sep) at 12:00 UTC
   workflow_dispatch:
 
 permissions:
