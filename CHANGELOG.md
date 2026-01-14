@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.13] - 2026-01-14
+
+### ⚙️ Miscellaneous Tasks
+
+- *(@mts-pjsc/image-optimize)* Release @mts-pjsc/image-optimize@1.3.12
+
 ## [1.3.12] - 2026-01-13
 
 ## [1.3.11] - 2026-01-13
